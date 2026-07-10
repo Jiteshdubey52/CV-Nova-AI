@@ -27,5 +27,18 @@ a { transition: color .18s ease, background .18s ease, transform .18s ease; }
 .resume-preview p, .resume-preview li { color: #475569; line-height: 1.7; }
 .resume-preview ul { list-style: disc; padding-left: 1.2rem; }
 .chip { border-radius: 999px; background: #ecfeff; color: #155e75; padding: .35rem .7rem; font-size: .85rem; font-weight: 650; }
+.template-card { border: 1px solid #e2e8f0; border-radius: .75rem; background: #fff; padding: 1rem; box-shadow: 0 16px 40px rgb(15 23 42 / .06); }
+.template-card h2 { margin-top: 1rem; font-size: 1.1rem; font-weight: 760; }
+.template-card p { margin-top: .35rem; color: #475569; line-height: 1.5; }
+.template-card small { display: block; margin-top: .65rem; color: #64748b; }
+.template-paper { display: grid; gap: .55rem; min-height: 13rem; border-radius: .55rem; border: 1px solid #cbd5e1; background: linear-gradient(180deg,#fff,#f8fafc); padding: 1rem; }
+.template-paper span { display: block; height: .55rem; border-radius: 999px; background: #cbd5e1; }
+.template-paper span:first-child { height: 1rem; width: 48%; background: #0f172a; }
+.template-paper span:nth-child(2) { width: 72%; }
+.template-paper span:nth-child(3) { width: 90%; }
+.template-paper span:nth-child(4) { width: 58%; }
+.template-nova { border-top: .35rem solid #0891b2; }
+.template-linear { border-top: .35rem solid #4f46e5; }
+.template-executive { border-top: .35rem solid #111827; }
 svg { width: 1.1rem; height: 1.1rem; }
 @media (min-width: 640px) { .shell { padding-left: 1.5rem; padding-right: 1.5rem; } }

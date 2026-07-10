@@ -1,2 +1,26 @@
 {% extends "base.html" %}
-{% block content %}<section class="auth-card"><h1>New resume</h1><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input class="input" name="title" placeholder="Resume title" required><input class="input" name="target_role" placeholder="Target role"><select class="input" name="template"><option value="nova">Nova</option><option value="linear">Linear</option><option value="executive">Executive</option></select><button class="btn-primary w-full">Create</button></form></section>{% endblock %}
+{% block content %}
+<section class="shell">
+  <div class="mb-6"><p class="eyebrow">Resume builder</p><h1>Create a resume</h1><p class="mt-3 text-slate-600">Start from a professional template and tune it for your target role.</p></div>
+  <form method="post" class="grid gap-6 lg:grid-cols-[0.8fr_1fr]">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="panel space-y-4">
+      <input class="input" name="title" placeholder="Resume title" required>
+      <input class="input" name="target_role" placeholder="Target role">
+      <label class="block text-sm font-semibold">Template</label>
+      <select class="input" name="template">
+        {% for template in templates %}<option value="{{ template.id }}" {% if selected_template == template.id %}selected{% endif %}>{{ template.name }} - {{ template.best_for }}</option>{% endfor %}
+      </select>
+      <button class="btn-primary w-full">Create resume</button>
+    </div>
+    <div class="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
+      {% for template in templates %}
+        <article class="template-card {% if selected_template == template.id %}ring-2 ring-cyan-600{% endif %}">
+          <div class="template-paper template-{{ template.id }}"><span></span><span></span><span></span><span></span></div>
+          <h2>{{ template.name }}</h2><p>{{ template.best_for }}</p><small>{{ template.tone }}</small>
+        </article>
+      {% endfor %}
+    </div>
+  </form>
+</section>
+{% endblock %}

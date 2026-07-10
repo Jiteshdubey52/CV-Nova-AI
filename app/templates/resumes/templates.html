@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="shell">
+  <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div><p class="eyebrow">Template gallery</p><h1>Choose your resume template</h1><p class="mt-3 text-slate-600">Each template is ATS-friendly and designed for a different career signal.</p></div>
+    <a class="btn-primary" href="{{ url_for('resumes.new') }}">Start blank</a>
+  </div>
+  <div class="grid gap-5 md:grid-cols-3">
+    {% for template in templates %}
+      <article class="template-card">
+        <div class="template-paper template-{{ template.id }}"><span></span><span></span><span></span><span></span></div>
+        <h2>{{ template.name }}</h2>
+        <p>{{ template.best_for }}</p>
+        <small>{{ template.tone }}</small>
+        <a class="btn-primary mt-4 w-full" href="{{ url_for('resumes.new', template=template.id) }}">Use {{ template.name }}</a>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

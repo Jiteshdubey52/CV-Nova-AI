@@ -56,6 +56,19 @@ class AIService:
             return OpenAIProvider()
         return LocalProvider()
 
+    def status(self) -> dict[str, str | bool]:
+        selected = current_app.config.get("AI_PROVIDER", "openai")
+        has_openai = bool(current_app.config.get("OPENAI_API_KEY"))
+        has_gemini = bool(current_app.config.get("GEMINI_API_KEY"))
+        configured = (selected == "openai" and has_openai) or (selected == "gemini" and has_gemini)
+        return {
+            "provider": selected,
+            "configured": configured,
+            "openai_ready": has_openai,
+            "gemini_ready": has_gemini,
+            "message": "Live AI is connected." if configured else "Add an OpenAI or Gemini API key to enable live AI generation.",
+        }
+
     def summary(self, resume_content: dict, target_role: str) -> str:
         return self.provider().generate(f"Write a concise ATS-friendly resume summary for {target_role}. Resume: {resume_content}")
 

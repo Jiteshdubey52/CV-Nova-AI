@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="shell">
+  <div class="mb-8"><p class="eyebrow">Export center</p><h1>Download {{ resume.title }}</h1><p class="mt-3 text-slate-600">Export polished files for job boards, recruiters, email attachments, and personal archives.</p></div>
+  <div class="grid gap-5 md:grid-cols-2">
+    <article class="panel"><h2>PDF resume</h2><p class="mb-5 text-slate-600">Best for direct applications and recruiter sharing.</p><a class="btn-primary w-full" href="{{ url_for('resumes.export', resume_id=resume.id, kind='pdf') }}">Download PDF</a></article>
+    <article class="panel"><h2>DOCX resume</h2><p class="mb-5 text-slate-600">Best when you need editable formatting in Microsoft Word.</p><a class="btn-primary w-full" href="{{ url_for('resumes.export', resume_id=resume.id, kind='docx') }}">Download DOCX</a></article>
+  </div>
+  <div class="mt-6">{% include "resumes/preview.html" %}</div>
+</section>
+{% endblock %}
