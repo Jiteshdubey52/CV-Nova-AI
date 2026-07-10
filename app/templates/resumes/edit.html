@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="shell" x-data="{name: '{{ resume.content.get('name','') }}', summary: `{{ resume.content.get('summary','') }}`}">
+  <div class="mb-6"><h1>Edit resume</h1><p class="text-slate-600">Changes create a version snapshot automatically.</p></div>
+  <form method="post" class="grid gap-6 lg:grid-cols-[0.85fr_1fr]">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="panel space-y-3">
+      <input class="input" name="title" value="{{ resume.title }}" placeholder="Title">
+      <input class="input" name="target_role" value="{{ resume.target_role }}" placeholder="Target role">
+      <select class="input" name="template"><option value="nova">Nova</option><option value="linear">Linear</option><option value="executive">Executive</option></select>
+      <input class="input" name="name" x-model="name" value="{{ resume.content.get('name','') }}" placeholder="Full name">
+      <input class="input" name="email" value="{{ resume.content.get('email','') }}" placeholder="Email">
+      <input class="input" name="phone" value="{{ resume.content.get('phone','') }}" placeholder="Phone">
+      <input class="input" name="location" value="{{ resume.content.get('location','') }}" placeholder="Location">
+      <textarea class="input min-h-28" name="summary" x-model="summary" placeholder="Professional summary">{{ resume.content.get('summary','') }}</textarea>
+      <textarea class="input min-h-24" name="skills" placeholder="Skills, comma separated">{{ resume.content.get('skills',[])|join(', ') }}</textarea>
+      <textarea class="input min-h-32" name="experience" placeholder="Experience, one line per bullet">{{ resume.content.get('experience',[])|join('\n') }}</textarea>
+      <textarea class="input min-h-24" name="education" placeholder="Education">{{ resume.content.get('education',[])|join('\n') }}</textarea>
+      <textarea class="input min-h-20" name="links" placeholder="Links">{{ resume.content.get('links',[])|join('\n') }}</textarea>
+      <button class="btn-primary w-full">Save resume</button>
+    </div>
+    <div class="panel"><h2 x-text="name || 'Live preview'"></h2><p class="mt-3 text-slate-600" x-text="summary || 'Your polished resume summary appears here as you type.'"></p></div>
+  </form>
+</section>
+{% endblock %}

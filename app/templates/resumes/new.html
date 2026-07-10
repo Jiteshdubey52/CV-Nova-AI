@@ -1,0 +1,2 @@
+{% extends "base.html" %}
+{% block content %}<section class="auth-card"><h1>New resume</h1><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input class="input" name="title" placeholder="Resume title" required><input class="input" name="target_role" placeholder="Target role"><select class="input" name="template"><option value="nova">Nova</option><option value="linear">Linear</option><option value="executive">Executive</option></select><button class="btn-primary w-full">Create</button></form></section>{% endblock %}

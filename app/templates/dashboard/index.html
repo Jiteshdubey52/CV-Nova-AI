@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="shell">
+  <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div><p class="eyebrow">Dashboard</p><h1>Career workspace</h1></div>
+    <a class="btn-primary" href="{{ url_for('resumes.new') }}">New resume</a>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="metric"><span>Resumes</span><strong>{{ resumes|length }}</strong></div>
+    <div class="metric"><span>Average ATS</span><strong>{{ avg_score }}</strong></div>
+    <div class="metric"><span>AI documents</span><strong>{{ documents|length }}</strong></div>
+  </div>
+  <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_0.8fr]">
+    <div class="panel"><h2>Recent resumes</h2>{% for resume in resumes %}<a class="row" href="{{ url_for('resumes.detail', resume_id=resume.id) }}"><span>{{ resume.title }}</span><strong>{{ resume.ats_score }}%</strong></a>{% else %}<p>No resumes yet.</p>{% endfor %}</div>
+    <div class="panel"><h2>ATS trend</h2><canvas id="scoreChart" data-scores="{{ resumes|map(attribute='ats_score')|join(',') }}"></canvas></div>
+  </div>
+</section>
+{% endblock %}

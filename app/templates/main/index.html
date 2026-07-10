@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="border-b border-slate-200 bg-white">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8 lg:py-20">
+    <div class="flex flex-col justify-center">
+      <p class="mb-4 text-sm font-semibold uppercase tracking-wider text-cyan-700">AI career operating system</p>
+      <h1 class="max-w-3xl text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl">CVNova AI</h1>
+      <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-600">Build ATS-ready resumes, generate tailored cover letters, compare versions, optimize LinkedIn, and prepare for interviews from one polished workspace.</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="btn-primary" href="{{ url_for('auth.register') }}">Create your workspace</a>
+        <a class="btn-secondary" href="{{ url_for('auth.login') }}">Sign in</a>
+      </div>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-xl">
+      <div class="rounded-lg bg-white p-5 shadow-sm">
+        <div class="mb-4 flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-500">ATS Score</p>
+            <p class="text-4xl font-semibold">92</p>
+          </div>
+          <span class="rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700">Ready</span>
+        </div>
+        <div class="space-y-3">
+          <div class="h-3 w-full rounded-full bg-slate-100"><div class="h-3 w-[92%] rounded-full bg-cyan-600"></div></div>
+          <p class="text-sm text-slate-600">Matched keywords: Python, Flask, SQLAlchemy, AI, Product Thinking</p>
+        </div>
+      </div>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        {% for item in ["Resume versions", "Cover letters", "LinkedIn content", "Interview prep"] %}
+          <div class="rounded-lg border border-slate-200 bg-white p-4 text-sm font-medium shadow-sm">{{ item }}</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+<section class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+  <div class="grid gap-4 md:grid-cols-3">
+    {% for title, body in [("ATS Intelligence","Score resumes and match them to real job descriptions."),("AI Drafting","Generate summaries, rewritten bullets, and cover letters."),("Career Studio","Manage versions, exports, LinkedIn content, and interviews.")] %}
+      <article class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 class="text-lg font-semibold">{{ title }}</h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600">{{ body }}</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="shell">
+  <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div><p class="eyebrow">{{ resume.target_role or "General resume" }}</p><h1>{{ resume.title }}</h1><p class="text-slate-600">ATS score {{ resume.ats_score }}%</p></div>
+    <div class="flex flex-wrap gap-2"><a class="btn-secondary" href="{{ url_for('resumes.edit', resume_id=resume.id) }}">Edit</a><a class="btn-secondary" href="{{ url_for('resumes.export', resume_id=resume.id, kind='pdf') }}">PDF</a><a class="btn-secondary" href="{{ url_for('resumes.export', resume_id=resume.id, kind='docx') }}">DOCX</a></div>
+  </div>
+  <div class="grid gap-6 lg:grid-cols-[0.8fr_1fr]">
+    <div class="space-y-4">
+      <div class="panel"><h2>AI tools</h2><div class="grid gap-2"><button class="btn-secondary" data-ai-action="summary" data-resume="{{ resume.id }}">Generate summary</button><button class="btn-secondary" data-ai-action="skills" data-resume="{{ resume.id }}">Suggest skills</button><button class="btn-secondary" data-ai-action="linkedin" data-resume="{{ resume.id }}">Optimize LinkedIn</button></div><pre id="ai-output" class="mt-4 whitespace-pre-wrap rounded-lg bg-slate-950 p-4 text-sm text-white"></pre></div>
+      <div class="panel"><h2>Workflows</h2><div class="flex flex-wrap gap-2"><a class="btn-secondary" href="{{ url_for('resumes.match', resume_id=resume.id) }}">Job match</a><a class="btn-secondary" href="{{ url_for('resumes.cover_letter', resume_id=resume.id) }}">Cover letter</a><a class="btn-secondary" href="{{ url_for('resumes.versions', resume_id=resume.id) }}">Versions</a><a class="btn-secondary" href="{{ url_for('resumes.compare', resume_id=resume.id) }}">Compare</a></div></div>
+    </div>
+    {% include "resumes/preview.html" %}
+  </div>
+</section>
+{% endblock %}

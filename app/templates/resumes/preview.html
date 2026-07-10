@@ -1,0 +1,6 @@
+<article class="resume-preview">
+  <header><h2>{{ resume.content.get("name") or resume.title }}</h2><p>{{ resume.content.get("email") }} · {{ resume.content.get("phone") }} · {{ resume.content.get("location") }}</p></header>
+  <section><h3>Summary</h3><p>{{ resume.content.get("summary") or "Add a sharp, keyword-rich summary for your target role." }}</p></section>
+  <section><h3>Skills</h3><div class="flex flex-wrap gap-2">{% for skill in resume.content.get("skills", []) %}<span class="chip">{{ skill }}</span>{% endfor %}</div></section>
+  {% for section in ["experience", "education", "links"] %}<section><h3>{{ section.title() }}</h3><ul>{% for item in resume.content.get(section, []) %}<li>{{ item }}</li>{% endfor %}</ul></section>{% endfor %}
+</article>

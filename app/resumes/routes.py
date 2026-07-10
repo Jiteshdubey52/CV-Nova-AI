@@ -1,0 +1,113 @@
+from flask import Blueprint, Response, abort, flash, redirect, render_template, request, send_file, url_for
+from flask_login import current_user, login_required
+
+from app.extensions import db
+from app.models import GeneratedDocument, Resume
+from app.repositories.resume_repository import ResumeRepository
+from app.services.ai_service import AIService
+from app.services.export_service import ExportService
+from app.services.resume_service import ResumeService
+
+bp = Blueprint("resumes", __name__)
+
+
+@bp.route("/")
+@login_required
+def index():
+    resumes = ResumeRepository().list_for_user(current_user.id)
+    return render_template("resumes/index.html", resumes=resumes)
+
+
+@bp.route("/new", methods=["GET", "POST"])
+@login_required
+def new():
+    if request.method == "POST":
+        resume = ResumeService().create(current_user.id, request.form["title"], request.form.get("target_role", ""), request.form.get("template", "nova"))
+        flash("Resume created.", "success")
+        return redirect(url_for("resumes.edit", resume_id=resume.id))
+    return render_template("resumes/new.html")
+
+
+@bp.route("/<int:resume_id>")
+@login_required
+def detail(resume_id: int):
+    resume = _resume_or_404(resume_id)
+    return render_template("resumes/detail.html", resume=resume)
+
+
+@bp.route("/<int:resume_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit(resume_id: int):
+    resume = _resume_or_404(resume_id)
+    if request.method == "POST":
+        ResumeService().update_content(resume, request.form)
+        flash("Resume updated.", "success")
+        return redirect(url_for("resumes.detail", resume_id=resume.id))
+    return render_template("resumes/edit.html", resume=resume)
+
+
+@bp.route("/<int:resume_id>/delete", methods=["POST"])
+@login_required
+def delete(resume_id: int):
+    resume = _resume_or_404(resume_id)
+    ResumeRepository().delete(resume)
+    flash("Resume deleted.", "info")
+    return redirect(url_for("resumes.index"))
+
+
+@bp.route("/<int:resume_id>/versions")
+@login_required
+def versions(resume_id: int):
+    resume = _resume_or_404(resume_id)
+    return render_template("resumes/versions.html", resume=resume)
+
+
+@bp.route("/<int:resume_id>/match", methods=["GET", "POST"])
+@login_required
+def match(resume_id: int):
+    resume = _resume_or_404(resume_id)
+    result = None
+    if request.method == "POST":
+        result = ResumeService().compare_to_job(resume, request.form.get("job_description", ""))
+    return render_template("resumes/match.html", resume=resume, result=result)
+
+
+@bp.route("/<int:resume_id>/compare")
+@login_required
+def compare(resume_id: int):
+    resume = _resume_or_404(resume_id)
+    latest = resume.versions[-1] if resume.versions else None
+    return render_template("resumes/compare.html", resume=resume, latest=latest)
+
+
+@bp.route("/<int:resume_id>/export/<kind>")
+@login_required
+def export(resume_id: int, kind: str):
+    resume = _resume_or_404(resume_id)
+    exporter = ExportService()
+    if kind == "pdf":
+        return Response(exporter.to_pdf(resume), mimetype="application/pdf", headers={"Content-Disposition": f"attachment; filename={resume.title}.pdf"})
+    if kind == "docx":
+        from io import BytesIO
+
+        return send_file(BytesIO(exporter.to_docx(resume)), as_attachment=True, download_name=f"{resume.title}.docx")
+    abort(404)
+
+
+@bp.route("/<int:resume_id>/cover-letter", methods=["GET", "POST"])
+@login_required
+def cover_letter(resume_id: int):
+    resume = _resume_or_404(resume_id)
+    output = None
+    if request.method == "POST":
+        output = AIService().cover_letter(resume.content, request.form.get("job_description", ""))
+        db.session.add(GeneratedDocument(user_id=current_user.id, resume_id=resume.id, kind="cover_letter", title=f"Cover letter for {resume.title}", body=output))
+        db.session.commit()
+    return render_template("resumes/cover_letter.html", resume=resume, output=output)
+
+
+def _resume_or_404(resume_id: int) -> Resume:
+    resume = ResumeRepository().get_for_user(resume_id, current_user.id)
+    if not resume:
+        abort(404)
+    return resume

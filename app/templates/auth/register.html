@@ -1,0 +1,2 @@
+{% extends "base.html" %}
+{% block content %}<section class="auth-card"><h1>Create account</h1><form method="post">{{ form.hidden_tag() }}{{ form.name(class="input", placeholder="Name") }}{{ form.email(class="input", placeholder="Email") }}{{ form.password(class="input", placeholder="Password") }}{{ form.confirm(class="input", placeholder="Confirm password") }}{{ form.submit(class="btn-primary w-full") }}</form></section>{% endblock %}
