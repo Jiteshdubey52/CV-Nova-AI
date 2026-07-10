@@ -3,7 +3,7 @@
 <section class="shell">
   <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
     <div><p class="eyebrow">Dashboard</p><h1>Career workspace</h1></div>
-    <div class="flex flex-wrap gap-2"><a class="btn-secondary" href="{{ url_for('resumes.templates') }}">Choose template</a><a class="btn-primary" href="{{ url_for('resumes.new') }}">New resume</a></div>
+    <div class="flex flex-wrap gap-2"><a class="btn-secondary" href="{{ url_for('resumes.upload') }}">Upload old resume</a><a class="btn-secondary" href="{{ url_for('resumes.templates') }}">Choose template</a><a class="btn-primary" href="{{ url_for('resumes.new') }}">New resume</a></div>
   </div>
   <div class="grid gap-4 md:grid-cols-3">
     <div class="metric"><span>Resumes</span><strong>{{ resumes|length }}</strong></div>

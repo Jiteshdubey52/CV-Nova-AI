@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="shell">
-  <div class="mb-6"><p class="eyebrow">Resume builder</p><h1>Create a resume</h1><p class="mt-3 text-slate-600">Start from a professional template and tune it for your target role.</p></div>
+  <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p class="eyebrow">Resume builder</p><h1>Create a resume</h1><p class="mt-3 text-slate-600">Start from a professional template and tune it for your target role.</p></div><a class="btn-secondary" href="{{ url_for('resumes.upload') }}">Upload old resume</a></div>
   <form method="post" class="grid gap-6 lg:grid-cols-[0.8fr_1fr]">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="panel space-y-4">
@@ -13,7 +13,7 @@
       </select>
       <button class="btn-primary w-full">Create resume</button>
     </div>
-    <div class="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
+    <div class="grid gap-4 md:grid-cols-2">
       {% for template in templates %}
         <article class="template-card {% if selected_template == template.id %}ring-2 ring-cyan-600{% endif %}">
           <div class="template-paper template-{{ template.id }}"><span></span><span></span><span></span><span></span></div>

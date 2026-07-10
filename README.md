@@ -9,6 +9,8 @@ CVNova AI is a production-minded Flask SaaS for AI-assisted resumes, cover lette
 - OpenAI or Gemini through a provider abstraction
 - MySQL locally, PostgreSQL on Railway
 - PDF and DOCX downloads
+- Upload and analyze old PDF, DOCX, or TXT resumes
+- Ten modern resume templates with optional and custom sections
 
 ## Local setup
 
@@ -44,6 +46,20 @@ run_local.bat
 ## AI providers
 
 Open `/dashboard/settings` after signing in to choose OpenAI or Gemini and save a local API key. In production, configure `AI_PROVIDER`, `OPENAI_API_KEY`, and/or `GEMINI_API_KEY` as environment variables.
+
+For local development, paste your key in the app at:
+
+```text
+http://127.0.0.1:5000/dashboard/settings
+```
+
+Or place it in `.env`:
+
+```bash
+AI_PROVIDER=openai
+OPENAI_API_KEY=sk-your-key
+GEMINI_API_KEY=
+```
 
 ## Railway
 

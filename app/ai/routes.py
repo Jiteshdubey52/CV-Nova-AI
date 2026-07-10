@@ -26,7 +26,10 @@ def resume_action(resume_id: int, action: str):
     }
     if action not in actions:
         return jsonify({"error": "Unsupported action"}), 400
-    output = actions[action]()
+    try:
+        output = actions[action]()
+    except Exception as exc:
+        return jsonify({"error": f"AI generation failed: {exc}"}), 502
     db.session.add(GeneratedDocument(user_id=current_user.id, resume_id=resume.id, kind=action, title=f"{action.title()} for {resume.title}", body=output))
     db.session.commit()
     return jsonify({"output": output})

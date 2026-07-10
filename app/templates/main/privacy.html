@@ -1,2 +1,11 @@
 {% extends "base.html" %}
-{% block content %}<section class="page"><h1>Privacy Policy</h1><p>CVNova AI stores account, resume, and generated career content to provide the service. Secrets are configured through environment variables, passwords are hashed, and user content is never sold.</p></section>{% endblock %}
+{% block content %}
+<section class="page">
+  <p class="eyebrow">Legal</p><h1>Privacy Policy</h1>
+  <p>CVNova AI stores the account information and career content needed to provide resume building, AI writing, analysis, matching, and export features.</p>
+  <p>Resume content may include personal details, work history, education, skills, links, uploaded document text, generated cover letters, LinkedIn content, and interview preparation notes.</p>
+  <p>Passwords are hashed, forms are protected with CSRF validation, and application secrets are managed through environment variables. API keys entered in local development are stored in the local ignored `.env` file; production keys should be configured in the hosting provider environment.</p>
+  <p>When live AI is enabled, relevant resume or job-description content is sent to the selected provider, OpenAI or Gemini, to generate the requested output. Do not submit information you do not want processed by that provider.</p>
+  <p>CVNova AI does not sell user resume content. Users should review generated content before using it in job applications.</p>
+</section>
+{% endblock %}

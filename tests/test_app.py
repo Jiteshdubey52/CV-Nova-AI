@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from app.extensions import db
 from app.models import User
 
@@ -36,6 +38,26 @@ def test_user_can_register_and_create_resume(client, app):
     response = client.get("/resumes/1/export/pdf")
     assert response.status_code == 200
     assert response.headers["Content-Type"].startswith("application/pdf")
+    response = client.post("/ai/resume/1/summary", data={}, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"output" in response.data
+
+
+def test_user_can_upload_old_resume(client):
+    register(client)
+    response = client.post(
+        "/resumes/upload",
+        data={
+            "title": "Imported Profile",
+            "target_role": "AI Developer",
+            "template": "forge",
+            "resume_file": (BytesIO(b"Jitesh Sharma\njitesh@example.com\nPython Flask SQL AI\nBuilt production applications."), "resume.txt"),
+        },
+        content_type="multipart/form-data",
+        follow_redirects=True,
+    )
+    assert response.status_code == 200
+    assert b"Edit resume" in response.data
 
 
 def test_ai_settings_page_accepts_provider_keys(client):

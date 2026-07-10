@@ -1,2 +1,14 @@
 {% extends "base.html" %}
-{% block content %}<section class="page"><h1>About CVNova AI</h1><p>CVNova AI is built by Jitesh Sharma to help candidates present their strongest professional story with practical AI tools, clean exports, and job-specific feedback.</p></section>{% endblock %}
+{% block content %}
+<section class="shell">
+  <div class="grid gap-8 lg:grid-cols-[0.9fr_1fr]">
+    <div><p class="eyebrow">About</p><h1>CVNova AI turns career documents into a sharper advantage.</h1><p class="mt-5 text-lg leading-8 text-slate-600">CVNova AI is a premium AI-powered career platform for building ATS-friendly resumes, generating cover letters, improving LinkedIn profiles, matching resumes to jobs, and preparing for interviews.</p></div>
+    <div class="panel"><h2>Built by Jitesh Sharma</h2><p class="text-slate-600">Software Developer · AI Enthusiast</p><p class="mt-4 text-slate-600">The product is designed for job seekers who want a polished, practical workflow instead of generic resume templates. Every feature is built around clarity, measurable impact, recruiter readability, and modern export quality.</p><div class="mt-5 flex flex-wrap gap-2"><a class="btn-secondary" href="mailto:jiteshdubey878@gmail.com">Email</a><a class="btn-secondary" href="https://github.com/jiteshdubey52">GitHub</a><a class="btn-secondary" href="https://www.linkedin.com/in/jitesh-sharma-0a7818307/">LinkedIn</a><a class="btn-secondary" href="https://www.instagram.com/jiteshdubey52/" aria-label="Instagram"><i data-lucide="instagram"></i></a></div></div>
+  </div>
+  <div class="mt-10 grid gap-4 md:grid-cols-3">
+    <article class="panel"><h2>Resume intelligence</h2><p class="text-slate-600">ATS scoring, job matching, section controls, version history, and PDF/DOCX exports.</p></article>
+    <article class="panel"><h2>AI career writing</h2><p class="text-slate-600">Summaries, skills, experience rewrite, LinkedIn profile content, cover letters, and interview prep.</p></article>
+    <article class="panel"><h2>Professional workflow</h2><p class="text-slate-600">Upload an old resume, choose from modern templates, refine details, and download recruiter-ready files.</p></article>
+  </div>
+</section>
+{% endblock %}

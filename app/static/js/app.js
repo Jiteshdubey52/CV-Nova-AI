@@ -13,11 +13,19 @@ if (chart) {
 document.querySelectorAll("[data-ai-action]").forEach((button) => {
   button.addEventListener("click", async () => {
     const output = document.getElementById("ai-output");
+    button.disabled = true;
     output.textContent = "Generating...";
     const form = new FormData();
     form.append("csrf_token", document.querySelector("meta[name='csrf-token']")?.content || "");
-    const response = await fetch(`/ai/resume/${button.dataset.resume}/${button.dataset.aiAction}`, { method: "POST", body: form });
-    const data = await response.json();
-    output.textContent = data.output || data.error || "No output returned.";
+    try {
+      const response = await fetch(`/ai/resume/${button.dataset.resume}/${button.dataset.aiAction}`, { method: "POST", body: form, credentials: "same-origin" });
+      const contentType = response.headers.get("content-type") || "";
+      const data = contentType.includes("application/json") ? await response.json() : { error: await response.text() };
+      output.textContent = data.output || data.error || "No output returned.";
+    } catch (error) {
+      output.textContent = `AI request failed: ${error.message}`;
+    } finally {
+      button.disabled = false;
+    }
   });
 });

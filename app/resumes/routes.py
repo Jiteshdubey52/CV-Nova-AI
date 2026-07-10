@@ -7,6 +7,7 @@ from app.repositories.resume_repository import ResumeRepository
 from app.services.ai_service import AIService
 from app.services.export_service import ExportService
 from app.services.resume_service import ResumeService
+from app.services.upload_service import UploadResumeService
 
 bp = Blueprint("resumes", __name__)
 
@@ -29,6 +30,13 @@ TEMPLATES = [
         "best_for": "Senior engineering, leadership, and consulting",
         "tone": "Premium, impact-led, strategic",
     },
+    {"id": "atlas", "name": "Atlas", "best_for": "Global enterprise and consulting roles", "tone": "Authoritative, polished, balanced"},
+    {"id": "signal", "name": "Signal", "best_for": "Startup, product, and growth roles", "tone": "Sharp, lean, outcome-first"},
+    {"id": "aura", "name": "Aura", "best_for": "Creative, marketing, and brand roles", "tone": "Elegant, expressive, readable"},
+    {"id": "forge", "name": "Forge", "best_for": "Engineering, DevOps, and infrastructure", "tone": "Technical, dense, credibility-led"},
+    {"id": "clarity", "name": "Clarity", "best_for": "Freshers, internships, and campus placements", "tone": "Simple, clean, achievement-focused"},
+    {"id": "summit", "name": "Summit", "best_for": "Management, program, and operations leaders", "tone": "Executive, strategic, metrics-heavy"},
+    {"id": "pulse", "name": "Pulse", "best_for": "Sales, support, and customer success", "tone": "Energetic, measurable, people-centered"},
 ]
 
 
@@ -50,6 +58,31 @@ def new():
     return render_template("resumes/new.html", templates=TEMPLATES, selected_template=selected_template)
 
 
+@bp.route("/upload", methods=["GET", "POST"])
+@login_required
+def upload():
+    if request.method == "POST":
+        file = request.files.get("resume_file")
+        if not file or not file.filename:
+            flash("Choose a PDF, DOCX, or TXT resume to upload.", "warning")
+            return redirect(url_for("resumes.upload"))
+        try:
+            text = UploadResumeService().extract_text(file.filename, file.read())
+            resume = ResumeService().create_from_upload(
+                current_user.id,
+                request.form.get("title") or "Imported resume",
+                request.form.get("target_role", ""),
+                text,
+                request.form.get("template", "nova"),
+            )
+        except ValueError as exc:
+            flash(str(exc), "danger")
+            return redirect(url_for("resumes.upload"))
+        flash("Resume imported and analyzed. Review the extracted details before downloading.", "success")
+        return redirect(url_for("resumes.edit", resume_id=resume.id))
+    return render_template("resumes/upload.html", templates=TEMPLATES)
+
+
 @bp.route("/templates")
 @login_required
 def templates():
@@ -60,6 +93,7 @@ def templates():
 @login_required
 def detail(resume_id: int):
     resume = _resume_or_404(resume_id)
+    resume.content = ResumeService().normalized_content(resume.content)
     return render_template("resumes/detail.html", resume=resume, ai_status=AIService().status())
 
 
@@ -71,7 +105,8 @@ def edit(resume_id: int):
         ResumeService().update_content(resume, request.form)
         flash("Resume updated.", "success")
         return redirect(url_for("resumes.detail", resume_id=resume.id))
-    return render_template("resumes/edit.html", resume=resume)
+    resume.content = ResumeService().normalized_content(resume.content)
+    return render_template("resumes/edit.html", resume=resume, templates=TEMPLATES)
 
 
 @bp.route("/<int:resume_id>/delete", methods=["POST"])
@@ -104,6 +139,7 @@ def match(resume_id: int):
 @login_required
 def downloads(resume_id: int):
     resume = _resume_or_404(resume_id)
+    resume.content = ResumeService().normalized_content(resume.content)
     return render_template("resumes/downloads.html", resume=resume)
 
 
@@ -119,6 +155,7 @@ def compare(resume_id: int):
 @login_required
 def export(resume_id: int, kind: str):
     resume = _resume_or_404(resume_id)
+    resume.content = ResumeService().normalized_content(resume.content)
     exporter = ExportService()
     if kind == "pdf":
         return Response(exporter.to_pdf(resume), mimetype="application/pdf", headers={"Content-Disposition": f"attachment; filename={resume.title}.pdf"})

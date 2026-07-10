@@ -1,6 +1,8 @@
-<article class="resume-preview">
-  <header><h2>{{ resume.content.get("name") or resume.title }}</h2><p>{{ resume.content.get("email") }} · {{ resume.content.get("phone") }} · {{ resume.content.get("location") }}</p></header>
-  <section><h3>Summary</h3><p>{{ resume.content.get("summary") or "Add a sharp, keyword-rich summary for your target role." }}</p></section>
-  <section><h3>Skills</h3><div class="flex flex-wrap gap-2">{% for skill in resume.content.get("skills", []) %}<span class="chip">{{ skill }}</span>{% endfor %}</div></section>
-  {% for section in ["experience", "education", "links"] %}<section><h3>{{ section.title() }}</h3><ul>{% for item in resume.content.get(section, []) %}<li>{{ item }}</li>{% endfor %}</ul></section>{% endfor %}
+{% set hidden = resume.content.get("hidden_sections", []) %}
+<article class="resume-preview template-accent-{{ resume.template }}">
+  <header><h2>{{ resume.content.get("name") or resume.title }}</h2><p>{{ [resume.content.get("email"), resume.content.get("phone"), resume.content.get("location")]|select|join(" · ") }}</p></header>
+  {% if "summary" not in hidden %}<section><h3>Summary</h3><p>{{ resume.content.get("summary") or "Add a sharp, keyword-rich summary for your target role." }}</p></section>{% endif %}
+  {% if "skills" not in hidden %}<section><h3>Skills</h3><div class="flex flex-wrap gap-2">{% for skill in resume.content.get("skills", []) %}<span class="chip">{{ skill }}</span>{% endfor %}</div></section>{% endif %}
+  {% for section in ["experience", "education", "links"] %}{% if section not in hidden %}<section><h3>{{ section.title() }}</h3><ul>{% for item in resume.content.get(section, []) %}<li>{{ item }}</li>{% endfor %}</ul></section>{% endif %}{% endfor %}
+  {% for custom in resume.content.get("custom_sections", []) %}<section><h3>{{ custom.title }}</h3><ul>{% for item in custom["items"] %}<li>{{ item }}</li>{% endfor %}</ul></section>{% endfor %}
 </article>
