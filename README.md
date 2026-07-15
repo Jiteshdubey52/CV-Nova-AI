@@ -64,3 +64,25 @@ GEMINI_API_KEY=
 ## Railway
 
 Set `SECRET_KEY`, `DATABASE_URL`, `FLASK_ENV=production`, and optional AI/OAuth/mail variables. Railway runs the `Procfile` with Gunicorn.
+
+## Render
+
+Render deployment is configured with `render.yaml`.
+
+1. Push this repository to GitHub.
+2. In Render, choose **New > Blueprint**.
+3. Connect `Jiteshdubey52/CV-Nova-AI`.
+4. Render will create:
+   - `cvnova-ai` web service
+   - `cvnova-ai-db` Postgres database
+5. Add optional secrets in the Render dashboard:
+   - `OPENAI_API_KEY`
+   - `GEMINI_API_KEY`
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+
+The Render start command runs migrations before starting Gunicorn:
+
+```bash
+flask --app app:create_app db upgrade && gunicorn "app:create_app()" --bind 0.0.0.0:$PORT
+```
