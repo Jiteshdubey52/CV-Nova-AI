@@ -8,6 +8,11 @@ def index():
     return render_template("main/index.html")
 
 
+@bp.route("/healthz")
+def healthz():
+    return {"status": "ok", "service": "cvnova-ai"}
+
+
 @bp.route("/about")
 def about():
     return render_template("main/about.html")

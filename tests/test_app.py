@@ -2,6 +2,7 @@ from io import BytesIO
 
 from app.extensions import db
 from app.models import User
+from app.config import normalize_database_url
 
 
 def register(client):
@@ -16,6 +17,11 @@ def test_homepage_loads(client):
     response = client.get("/")
     assert response.status_code == 200
     assert b"CVNova AI" in response.data
+
+
+def test_postgres_url_uses_psycopg_driver():
+    assert normalize_database_url("postgresql://u:p@h/db").startswith("postgresql+psycopg://")
+    assert normalize_database_url("postgres://u:p@h/db").startswith("postgresql+psycopg://")
 
 
 def test_user_can_register_and_create_resume(client, app):

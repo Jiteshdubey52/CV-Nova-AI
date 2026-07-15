@@ -4,7 +4,9 @@ services:
     runtime: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: flask --app app:create_app db upgrade && gunicorn "app:create_app()" --bind 0.0.0.0:$PORT
+    preDeployCommand: flask --app app:create_app db upgrade
+    startCommand: gunicorn "app:create_app()" --bind 0.0.0.0:$PORT
+    healthCheckPath: /healthz
     envVars:
       - key: FLASK_ENV
         value: production
@@ -20,8 +22,6 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
-      - key: APP_BASE_URL
-        value: https://cvnova-ai.onrender.com
 
 databases:
   - name: cvnova-ai-db

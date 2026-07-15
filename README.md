@@ -81,8 +81,15 @@ Render deployment is configured with `render.yaml`.
    - `GOOGLE_CLIENT_ID`
    - `GOOGLE_CLIENT_SECRET`
 
-The Render start command runs migrations before starting Gunicorn:
+Render runs migrations before starting Gunicorn:
 
 ```bash
-flask --app app:create_app db upgrade && gunicorn "app:create_app()" --bind 0.0.0.0:$PORT
+flask --app app:create_app db upgrade
+gunicorn "app:create_app()" --bind 0.0.0.0:$PORT
+```
+
+Render health checks use:
+
+```text
+/healthz
 ```

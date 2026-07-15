@@ -2,11 +2,17 @@ import os
 from datetime import timedelta
 
 
+def normalize_database_url(url: str) -> str:
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql+psycopg://", 1)
+    if url.startswith("postgresql://"):
+        return url.replace("postgresql://", "postgresql+psycopg://", 1)
+    return url
+
+
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-change-me")
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///cvnova.db").replace(
-        "postgres://", "postgresql://", 1
-    )
+    SQLALCHEMY_DATABASE_URI = normalize_database_url(os.getenv("DATABASE_URL", "sqlite:///cvnova.db"))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_TIME_LIMIT = 3600
     REMEMBER_COOKIE_HTTPONLY = True
@@ -17,7 +23,9 @@ class Config:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     AI_PROVIDER = os.getenv("AI_PROVIDER", "openai")
-    APP_BASE_URL = os.getenv("APP_BASE_URL", "http://localhost:5000")
+    APP_BASE_URL = os.getenv("APP_BASE_URL") or (
+        f"https://{os.getenv('RENDER_EXTERNAL_HOSTNAME')}" if os.getenv("RENDER_EXTERNAL_HOSTNAME") else "http://localhost:5000"
+    )
     MAIL_SERVER = os.getenv("MAIL_SERVER")
     MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))
     MAIL_USE_TLS = os.getenv("MAIL_USE_TLS", "true").lower() == "true"
